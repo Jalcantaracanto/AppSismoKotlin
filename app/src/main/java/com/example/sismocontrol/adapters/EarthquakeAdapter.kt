@@ -1,14 +1,18 @@
 package com.example.sismocontrol.adapters
 
+import android.app.ActionBar.TabListener
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sismocontrol.databinding.EarthquakeItemBinding
 import com.example.sismocontrol.entities.Earthquake
 
+private val TAG = EarthquakeAdapter::class.java.simpleName
+
 class EarthquakeAdapter : RecyclerView.Adapter<EarthquakeAdapter.EarthquakeViewHolder>() {
 
-    lateinit var onItemClickList: (Earthquake) -> Unit
+    lateinit var onItemClickListener: (Earthquake) -> Unit
 
     //Atributo de clase
     var earthquakes = mutableListOf<Earthquake>()
@@ -41,8 +45,21 @@ class EarthquakeAdapter : RecyclerView.Adapter<EarthquakeAdapter.EarthquakeViewH
         RecyclerView.ViewHolder(bindingItem.root) {
 
         fun bind(earthquake: Earthquake) {
-            bindingItem.txtMagnitude.text = earthquake.magnitude.toString()
-            bindingItem.txtLocation.text = earthquake.location
+
+            with(earthquake) {
+                bindingItem.txtMagnitude.text = magnitude.toString()
+                bindingItem.txtLocation.text = location
+            }
+            bindingItem.root.setOnClickListener {
+                if (::onItemClickListener.isInitialized)
+                    onItemClickListener(earthquake)
+                else
+                    Log.e(TAG, "onItemClickList is not initialized")
+
+            }
+
+//            bindingItem.txtMagnitude.text = earthquake.magnitude.toString()
+//            bindingItem.txtLocation.text = earthquake.location
         }
     }
 
